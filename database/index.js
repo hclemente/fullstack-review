@@ -4,8 +4,8 @@ mongoose.connect('mongodb://localhost/fetcher');
 let repoSchema = mongoose.Schema({
   // TODO: your schema here!
   // _id = mongoose.Schema.Types.ObjectId,
-  // repo_id: {type: Number, unique: true},
-  repo_id: Number,
+  repo_id: {type: Number, unique: true},
+  // repo_id: Number,
   name: String,
   owner: {
     login: String,
@@ -13,7 +13,8 @@ let repoSchema = mongoose.Schema({
     html_url: String
   },
   description: String,
-  created_at: String
+  created_at: String,
+  html_url: String
 
 });
 
@@ -34,7 +35,8 @@ let save = (reposArray) => {
         html_url: reposArray[i].owner.html_url
       },
       description: reposArray[i].description,
-      created_at: reposArray[i].created_at
+      created_at: reposArray[i].created_at,
+      html_url: reposArray[i].html_url
     });
   //   oneRepo.save((err, result) => {
   //   if (err) {
@@ -44,12 +46,28 @@ let save = (reposArray) => {
   //   }
   // })
     oneRepo.save()
-    .then((result)=>console.log(`Saved document: ${reposArray[i].name}`, result))
-    .catch((err)=>console.log(err));
+    .then((result)=>console.log(`Saved document: ${reposArray[i].name}`))
+    .catch((err)=>console.log('Error saving', err));
   }
 
 }
 
+let get25 = (callback) => {
+  Repo.find( (err, repos) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // console.log(repos.length);
+      let top25 = repos.slice(repos.length - 25);
+      // console.log(top25.length)
+      callback(top25);
+    }
+  });
+
+}
 
 
-module.exports.save = save;
+module.exports = {
+  save: save,
+  get25: get25
+};

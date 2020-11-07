@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
-import axios from 'axios'
+import RenderRepos from './components/RenderRepos.jsx';
+import axios from 'axios';
+
+
 
 class App extends React.Component {
   constructor(props) {
@@ -12,6 +15,15 @@ class App extends React.Component {
       repos: []
     }
     this.search = this.search.bind(this);
+  }
+
+  componentDidMount() {
+    axios.get('/repos')
+    .then((response) => {
+      this.setState({repos: response.data});
+      console.log(this.state.repos);
+    })
+    .catch((err) => console.log('Error in componentDidMount'));
   }
 
   search (term) {
@@ -39,6 +51,7 @@ class App extends React.Component {
       <h1>Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>
       <Search onSearch={this.search}/>
+      <RenderRepos repos={this.state.repos}/>
     </div>)
   }
 }
