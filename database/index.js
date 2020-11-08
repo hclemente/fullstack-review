@@ -59,8 +59,12 @@ let get25 = (callback) => {
     } else {
       // console.log(repos.length);
       let top25 = repos.slice(repos.length - 25);
+      var top25Reverse = [];
+      for(let i = top25.length -1; i >= 0; i--) {
+        top25Reverse.push(top25[i]);
+      }
       // console.log(top25.length)
-      callback(top25);
+      callback(top25Reverse);
     }
   });
 

@@ -15,15 +15,33 @@ class App extends React.Component {
       repos: []
     }
     this.search = this.search.bind(this);
+    this.refreshPage = this.refreshPage.bind(this);
   }
 
   componentDidMount() {
     axios.get('/repos')
     .then((response) => {
       this.setState({repos: response.data});
-      console.log(this.state.repos);
+      // console.log(this.state.repos);
     })
     .catch((err) => console.log('Error in componentDidMount'));
+  }
+
+  // componentDidUpdate(prevProps) {
+  //     // Typical usage (don't forget to compare props):
+  //   if (this.props.repos[0].name !== prevProps.repos[0].name) {
+  //   this.fetchData(this.props.userID);
+  //   }
+  // }
+
+  refreshPage() {
+
+      axios.get('/repos')
+      .then((response) => {
+        this.setState({repos: response.data});
+      })
+      .catch((err) => {console.log('Error in search post', err)});
+
   }
 
   search (term) {
@@ -41,6 +59,9 @@ class App extends React.Component {
     // });
     axios.post('/repos', {
       searched: term
+    })
+    .then((response) => {
+      this.refreshPage();
     })
     // .then((res) => console.log(res))
     .catch((err) => {console.log('Error in search post', err)});
